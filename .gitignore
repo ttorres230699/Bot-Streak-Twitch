@@ -1,4 +1,4 @@
 *.json
 code/script.py
-*.md
-LICENSE.txt
+LICENSE
+README.md
