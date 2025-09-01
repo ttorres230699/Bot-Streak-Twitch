@@ -4,10 +4,10 @@ import asyncio
 
 # Configuration de l'API Twitch
 # Remplacez les valeurs par vos propres identifiants
-#my_client_id = "fteqr8szft6ktj61ph4kg8yjtila8f" # https://dev.twitch.tv/console
-#my_client_secret_id = "04h84viqqlyqir4x4vrji0ec8pp69j" # https://dev.twitch.tv/console
-my_oauth_token = "nrivp7kxtt489df5jyumr2m9w72ck7" # https://twitchtokengenerator.com/
-my_channel = "kinguben"  # Remplacez par le nom de votre chaîne
+#my_client_id = "" # https://dev.twitch.tv/console
+#my_client_secret_id = "" # https://dev.twitch.tv/console
+my_oauth_token = "" # https://twitchtokengenerator.com/
+my_channel = ""  # Remplacez par le nom de votre chaîne
 
 temps_boucle_annonce = 60 # Temps d'attente entre chaque annonce en secondes
 
