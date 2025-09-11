@@ -33,9 +33,14 @@ Le dossier `Bot-Streak-Twitch` est créé avec le code existant
 ### 1.1 Récupération des informations Twitch
 
 1. Aller sur [TwitchTokenGenerator](https://twitchtokengenerator.com/), choisis "Bot Chat Twitch" et récupère ton ACCESS TOKEN.
-2. Dans le fichier `info chaine.txt` dans le dossier data
-   - À la première ligne mettre le nom de la chaîne sans les majuscules
-   - À la deuxième ligne mettre l'ACCES TOKEN
+2. Dans le dossier data créer le fichier 
+   - `recompense streak.txt`
+   - `streak viewer.txt`
+   - `muted viewer.txt`
+   - `date stream.txt`
+   - `info chaine.txt` et dedans :
+      - À la première ligne mettre le nom de la chaîne sans les majuscules
+      - À la deuxième ligne mettre l'ACCES TOKEN
 3. Dans le code :
    - Ligne 12 : règle le temps entre chaque annonce de nouvelle streak (en secondes, par défaut : 60s).
    - Ligne 14 : règle le temps minimal entre deux streams (en heures, par défaut : 12h).
