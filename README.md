@@ -4,7 +4,7 @@
 
 Avant de commencer, assure-toi d’avoir installé :
 
-- **Python** (disponible sur le Microsoft Store)
+- [**Python**](https://www.python.org/downloads/   )
 - **Éditeur de texte** recommandé : [Visual Studio Code](https://code.visualstudio.com/)
 - **Bibliothèques Python** :
   - [TwitchIO](https://twitchio.dev/en/latest/) (version 2.2.0)
@@ -17,21 +17,29 @@ Installe-les avec :
 pip install twitchio==2.2.0 pandas asyncio
 ```
 
-- **(Optionnel)** [Git](https://git-scm.com/downloads/win) pour faciliter les mises à jour (laisser les options par défaut).
+-[Git](https://git-scm.com/downloads/win) pour faciliter les mises à jour (laisser les options par défaut).
 
 ---
 
 ## 1. Configuration du bot
 
+- Dans le dossier où mettre le bot (par exemple Documents, Bureau, etc.) faire un clique droit et sélectionner "Ouvrir le terminal"
+- Dans le terminal, coller: 
+   ```bash
+   git clone https://github.com/ttorres230699/Bot-Streak-Twitch
+   ```
+- - Ouvre le fichier `.gitignore` et enlève le `#` devant `data/` pour que le dossier `data` ne soit pas suivi par Git.
+Le dossier `Bot-Streak-Twitch` est créé avec le code existant
 ### 1.1 Récupération des informations Twitch
 
-1. Va sur [TwitchTokenGenerator](https://twitchtokengenerator.com/), choisis "Bot Chat Twitch" et récupère ton ACCESS TOKEN.
-2. Dans le code :
-   - Ligne 9 : colle ton ACCESS TOKEN.
-   - Ligne 10 : indique le nom de ta chaîne Twitch (sans majuscule).
+1. Aller sur [TwitchTokenGenerator](https://twitchtokengenerator.com/), choisis "Bot Chat Twitch" et récupère ton ACCESS TOKEN.
+2. Dans le fichier `info chaine.txt` dans le dossier data
+   - À la première ligne mettre le nom de la chaîne sans les majuscules
+   - À la deuxième ligne mettre l'ACCES TOKEN
+3. Dans le code :
    - Ligne 12 : règle le temps entre chaque annonce de nouvelle streak (en secondes, par défaut : 60s).
    - Ligne 14 : règle le temps minimal entre deux streams (en heures, par défaut : 12h).
-3. Renseigne les récompenses de streak dans le fichier `recompense streak.txt` au format :
+4 . Renseigne les récompenses de streak dans le fichier `recompense streak.txt` au format :
    ```
    nb_de_streak_1;recompense_streak_1
    nb_de_streak_2;recompense_streak_2
@@ -44,7 +52,7 @@ pip install twitchio==2.2.0 pandas asyncio
 
 ### 2.1 Modifier le script `obs+bot.bat`
 
-1. Ouvre le fichier `obs+bot.bat` (clic droit > Ouvrir avec > Bloc-notes ou VS Code).
+1. Ouvre le fichier `Obs+bot.bat` (clic droit > Ouvrir avec > Bloc-notes ou VS Code).
 2. Modifie :
    - Ligne 14 : remplace `TonCheminVersLeBot\code` par le chemin du dossier `code`.
    - Ligne 16 : remplace `CheminVersPython\python.exe` par le chemin de l’exécutable Python.
@@ -56,7 +64,7 @@ pip install twitchio==2.2.0 pandas asyncio
 2. Clic droit sur le raccourci > Propriétés.
 3. Dans "Cible", mets :
    ```
-   C:\Windows\System32\cmd.exe /k "CheminVersLeBat\Obs+bot.bat"
+   C:\Windows\System32\cmd.exe /k "CheminVersLeBat\obs+bot.bat"
    ```
    Remplace `CheminVersLeBat\Obs+bot.bat` par le chemin réel.
 4. Toujours dans Propriétés > "Changer d’icône" > Parcourir :
@@ -68,16 +76,7 @@ pip install twitchio==2.2.0 pandas asyncio
 
 ## 3. Mettre à jour le bot avec Git
 
-Si tu viens d’installer Git, voici comment récupérer et mettre à jour le bot :
-
-### 3.1 **Cloner le projet (première utilisation)**  
-   Ouvre l’invite de commandes dans le dossier où tu veux installer le bot, puis tape :
-   ```bash
-   git clone https://github.com/ttorres230699/Bot-Streak-Twitch
-   ```
-
-### 3.2 **Mettre à jour le bot (par la suite)**  
-   Pour récupérer les dernières modifications, va dans le dossier du bot et tape :
+Pour récupérer les dernières modifications, va dans le dossier du bot et tape :
    ```bash
    git pull
    ```

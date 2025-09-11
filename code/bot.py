@@ -6,8 +6,6 @@ import asyncio
 # Remplacez les valeurs par vos propres identifiants
 #my_client_id = "" # https://dev.twitch.tv/console
 #my_client_secret_id = "" # https://dev.twitch.tv/console
-my_oauth_token = "" # https://twitchtokengenerator.com/
-my_channel = ""  # Remplacez par le nom de votre chaîne
 
 temps_boucle_annonce = 60 # Temps d'attente entre chaque annonce en secondes
 
@@ -31,7 +29,7 @@ recompense_streak = pd.read_csv("../data/recompense streak.txt", header=None, na
 
 # Trier les récompenses par ordre croissant de streak
 
-streak_viewer = pd.read_csv("../data/streak viewer.txt", header=0, names=["Id","Viewer", "Streak","Derniere Date de Connexion"], sep=";",dtype={ "Viewer": str, "Streak": int}, parse_dates=["Derniere Date de Connexion"])
+streak_viewer = pd.read_csv("../data/streak viewer.txt", header=0, names=["Id","Viewer", "Streak","Derniere Date de Connexion"], sep=";",dtype={ "Id":str, "Viewer": str, "Streak": int}, parse_dates=["Derniere Date de Connexion"])
 
 annonce_streak = pd.DataFrame(columns=["Viewer", "Streak"])
 
@@ -65,7 +63,17 @@ with open("../data/muted viewers.txt","r",encoding="utf-8") as f2:
     for line in f2:
         muted_viewers.add(line.strip())
     
-    
+with open("../data/info chaine.txt","r",encoding="utf-8") as f3:
+    #verifier s il y a au moins deux lignes
+    lines = f3.readlines()
+    if len(lines) >= 2: 
+        my_channel = lines[0].strip()
+        oauth_token = lines[1].strip()
+    else:
+        raise ValueError("Le fichier info chaine.txt doit contenir au moins deux lignes : le nom de la chaîne et le token OAuth.")
+
+my_oauth_token= "oauth:" + oauth_token 
+
 print(f"Date du dernier stream: {der_date_stream}")
 print(f"Date du stream actuel: {date_stream}")  
 
@@ -87,7 +95,7 @@ class MyBot(commands.Bot):
 
     def __init__(self): 
         super().__init__(
-            token="oauth:nrivp7kxtt489df5jyumr2m9w72ck7",
+            token=my_oauth_token,
             #client_id=my_client_id, 
             #client_secret=my_client_secret_id,
             #bot_id=my_bot_id,
@@ -108,8 +116,8 @@ class MyBot(commands.Bot):
             muted_viewers.add("moobot")
             muted_viewers.add("nightbot")    
             with open("../data/muted viewers.txt","w",encoding="utf-8") as f2:
-                f2.write(f"{self.nick}\n")
-        
+                for viewer in muted_viewers:
+                    f2.write(f"{viewer}\n")
     
 
 
@@ -147,6 +155,12 @@ class MyBot(commands.Bot):
         else:
         # Enlève le @ si présent
             username = username.lstrip("@")
+            
+        Ids = streak_viewer.loc[streak_viewer["Viewer"]==username,"Id"].values
+        if Ids.size == 0:
+            await ctx.send(f"@{username} n'a pas encore commencé ta série de visionnage.")
+            return
+
         id=streak_viewer.loc[streak_viewer["Viewer"]==username,"Id"].values[0]
         val_exacte,proch_streak,proch_recompense = prochaine_recompense(id)
         if id not in streak_viewer["Id"].values:
@@ -193,30 +207,44 @@ class MyBot(commands.Bot):
         Décris les commandes du bot de streaks.
         """
         message = (
-            "Voici les commandes du bot de streaks :\n"
-            "!mystreak : Affiche ta série de visionnage.\n"
-            "!mutestreak : Muter le bot de streaks pour ne plus recevoir d'annonces.\n"
-            "!unmutestreak : Unmuter le bot de streaks pour recevoir à nouveau les annonces.\n"
-            "!botstreak : Affiche les commandes du bot de streaks.\n"
-            "!recompensestreak : Affiche les récompenses disponibles pour les streaks.\n"
+            "Voici les commandes du bot de streaks : |"
+            "!mystreak : Affiche ta série de visionnage. |"
+            "!mutestreak : Muter le bot de streaks pour ne plus recevoir d'annonces.|"
+            "!unmutestreak : Unmuter le bot de streaks pour recevoir à nouveau les annonces.|"
+            "!botstreak : Affiche les commandes du bot de streaks.|"
+            "!recompensestreak : Affiche les récompenses disponibles pour les streaks.|"
             f"Le bot annonce les streaks toutes les {temps_boucle_annonce} secondes."
         )
+        if len(message) > 450:
+            parts = message.split("|")
+            current_message = ""
+            for part in parts:
+                if len(current_message) + len(part) + 1 > 450:
+                    await ctx.send(current_message)
+                    current_message = part
+                else:
+                    if current_message:
+                        current_message += "|" + part
+                    else:
+                        current_message = part
+            if current_message:
+                await ctx.send(current_message) 
         await ctx.send(message)
         
-@commands.command(name="recompensestreak")  #commande !recompensestreak
-async def recompensestreak(self, ctx):
-    """
-    Affiche les récompenses disponibles pour les streaks.
-    """
-    message = "Voici les récompenses disponibles pour les streaks :\n"
-    for index, row in recompense_streak.iterrows():
-        line = f"{row['Streak']} visionnages consécutifs : {row['Récompense']}\n"
-        if len(message) + len(line) > 450:
+    @commands.command(name="recompensestreak")  #commande !recompensestreak
+    async def recompensestreak(self, ctx):
+        """
+        Affiche les récompenses disponibles pour les streaks.
+        """
+        message = "Voici les récompenses disponibles pour les streaks :\n"
+        for index, row in recompense_streak.iterrows():
+            line = f"{row['Streak']} visionnages consécutifs : {row['Récompense']}\n"
+            if len(message) + len(line) > 450:
+                await ctx.send(message)
+                message = ""
+            message += line
+        if message: 
             await ctx.send(message)
-            message = ""
-        message += line
-    if message:
-        await ctx.send(message)
      
     
         
